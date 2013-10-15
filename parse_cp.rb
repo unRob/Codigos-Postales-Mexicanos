@@ -4,9 +4,12 @@
 require 'csv'
 require 'pp'
 require 'mongo'
-$mongo = Mongo::Connection.new.db('codigos_postales')
+$mongo = Mongo::MongoClient.new.db('codigos_postales')
 
 estados = {}
+
+# Limpiamos el archivo de ingesta, pasándo lo de windows-latin-1 a utf8 y quitando la primera línea pendeja
+`iconv -f ISO-8859-15 -t UTF-8 CPdescarga.txt | sed '1d' > CPdescarga-utf8.txt`
 
 CSV.foreach("CPdescarga.txt", headers: true, encoding: "UTF-8", col_sep:'|', quote_char:'|') do |row|
   
